@@ -1,0 +1,9 @@
+{
+	"Changelist" : 3195953,
+	"CompatibleChangelist" : 0,
+	"BuildId" : "fe0f657c-6b2c-48dc-899c-11228d9ad889",
+	"Modules" : 
+	{
+		"delirium_tower" : "UE4Editor-delirium_tower-7343.dll"
+	}
+}

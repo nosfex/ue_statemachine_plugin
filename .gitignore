@@ -60,3 +60,8 @@ Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+delirium_tower/Intermediate/
+delirium_tower/Content/StarterContent/Architecture/Wall_400x200.uasset
+delirium_tower/Content/StarterContent/
+delirium_tower/Saved/
+*.pdb
