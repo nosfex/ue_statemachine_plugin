@@ -119,4 +119,8 @@ protected:
 	will be taken. */
 	UPROPERTY(EditAnywhere, Instanced)
 		TArray<USM_Branch*> InstancedBranches;
+	/** Branches to other states. These are in priority order, so the first successful branch
+	will be taken. These run before	InstancedBranches*/
+	UPROPERTY(EditAnywhere)
+		TArray<USM_Branch*> SharedBranches;
 };

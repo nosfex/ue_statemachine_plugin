@@ -24,6 +24,8 @@ void UQuestStatus::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 
 void UQuestStatus::UpdateQuests(USM_InputAtom* QuestActivity)
 {
+
+	TArray<int32> RecentlyCompletedQuests;
 	// Update the master list  of everything we've ever done
 	QuestActivities.Add(QuestActivity);
 
@@ -32,10 +34,56 @@ void UQuestStatus::UpdateQuests(USM_InputAtom* QuestActivity)
 	{
 		if (QuestList[i].UpdateQuest(this, QuestActivity))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Quest \"%s\" completed: %s"), *QuestList[i].Quest->QuestName.ToString(), (QuestList[i].QuestProgress == EQuestCompletion::EQC_Succeeded) ? TEXT("Succeeded") : TEXT("Failed"));
+			RecentlyCompletedQuests.Add(i);
 		}
 	}
+
+	for (int32 i = RecentlyCompletedQuests.Num() - 1; i >= 0; --i)
+	{
+		FQuestInProgress& QIP = QuestList[RecentlyCompletedQuests[i]];
+		if (QIP.QuestProgress == EQuestCompletion::EQC_Succeeded)
+		{
+			QIP.Quest->OnSucceeded(this);
+		}
+		else 
+		{
+			QIP.Quest->OnFailure(this);
+		}
+		RecentlyCompletedQuests.RemoveAtSwap(i);
+
+	}
+
+
+bool UQuestStatus::BeginQuest(const UQuest* Quest)
+{
+	for (FQuestInProgress& QIP : QuestList)
+	{
+		if (QIP.Quest == Quest)
+		{
+			if (QIP.QuestInProgress == EQuestCompletion::EQC_NotStarted)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Changing Quest \"%s\" to Started status"), *QIP.Quest->QuestName.ToString());
+				QIP.QuestInProgress = EQuestCompletion::EQC_Started; 
+				return true;
+			}
+
+			UE_LOG(LogTemp, Warning, TEXT("Quest \"%s\" is Already in the list / not correct state"), *QIP.Quest->QuestName.ToString());
+			return false;
+		}
+
+	}
+
+	QuestList.Add(FQuestInProgress::NewQuestInProgress(Quest));
+	return false;
 }
 
+void UQuestStatus::OnSucceeded(class UQuestStatus* QuestStatus)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Quest \"%s\" succeeded!"), *QuestName.ToString() );
+}
+void UQuestStatus::OnFailed(class UQuestStatus* QuestStatus)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Quest \"%s\" failed!"), *QuestName.ToString());
+}
 
 

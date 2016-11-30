@@ -25,21 +25,49 @@ class DELIRIUM_TOWER_API UQuest : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	virtual void OnSucceeded(class UQuestStatus* QuestStatus) const;
+	virtual void OnFailed(class UQuestStatus* QuestStatus) const;
+protected:
+	// Quests that will start if we succeed this
+	UPROPERTY(EditAnywhere)
+	TArray<UQuest*> SuccessQuests;
+
+	UPROPERTY(EditAnywhere)
+	TArray<USM_InputAtom*> SuccessInputs;
+
+	// Quests that will start if we fail this
+	UPROPERTY(EditAnywhere)
+	TArray<UQuest*> FailureQuests;
+
+	// Input atoms to add to failure
+	UPROPERTY(EditAnywhere)
+	TArray<USM_InputAtom*> FailureInputs;
+};
+
+UCLASS()
+class DELIRIUM_TOWER_API UQuestWithResult : public UDataAsset
+{
+	GENERATED_BODY()
+
+public:
 	// Name of the quest
 	UPROPERTY(EditAnywhere)
-	FText QuestName;
+		FText QuestName;
 
 	// If this quest accepts our quest activities log, it's succesful
 	UPROPERTY(EditAnywhere)
-	USM_State* QuestStateMachine;
-	
+		USM_State* QuestStateMachine;
+
 	// If true, the inputlist is a blacklist
 	UPROPERTY(EditAnywhere)
-	uint32 bInputBlackList : 1;
+		uint32 bInputBlackList : 1;
 
 	// The blacklist used to filter InputAtoms this quest recognizes
 	UPROPERTY(EditAnywhere)
-	TArray<USM_InputAtom*> InputList;
+		TArray<USM_InputAtom*> InputList;
+
+	virtual void OnSucceeded(class UQuestStatus* QuestStatus) const;
+	virtual void OnFailed(class UQuestStatus* QuestStatus) const;
 };
 
 USTRUCT()
@@ -85,6 +113,14 @@ public:
 		}
 		return false;
 	}
+
+	static FQuestInProgress NewQuestInProgress(const UQuest* _Quest)
+	{
+		FQuestInProgress NewQIP;
+		NewQIP.Quest = _Quest;
+		NewQIP.QuestProgress = EQuestCompletion::EQC_Started;
+		return NewQIP;
+	}
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent) )
@@ -107,6 +143,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Quests")
 	void UpdateQuests(USM_InputAtom* QuestActivity);
 
+	/*
+		Add a new quest-in-progress entry, or begin the quest provided if it's already on the list and hasn't been started yet.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Quests")
+	bool BeginQuest(const UQuest* Quest);
 protected:
 	// The master list of all quests related things we done
 	UPROPERTY(EditAnywhere)
@@ -116,4 +157,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TArray<FQuestInProgress> QuestList;
 
+
 };
+
+

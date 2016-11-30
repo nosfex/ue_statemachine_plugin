@@ -42,6 +42,20 @@ FStateMachineResult USM_State::RunState(const UObject* RefObject,
 				}
 			}
 		}
+
+		for (int32 i = 0; i < SharedBranches.Num(); ++i)
+		{
+			// This could be a check. There shouldn't be null branches in the list.
+			if (SharedBranches[i])
+			{
+				DestinationState = SharedBranches[i]->TryBranch(RefObject,
+					DataSource, DataIndex, DestinationDataIndex);
+				if (DestinationState)
+				{
+					return DestinationState->RunState(RefObject, DataSource, DestinationDataIndex, RemainingSteps - 1);
+				}
+			}
+		}
 		// We didn't find any acceptable branch, so we must end on this state unless we're told to loop.
 		if (bLoopByDefault)
 		{
