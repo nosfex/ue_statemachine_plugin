@@ -3,6 +3,43 @@
 #include "delirium_tower.h"
 #include "Quest.h"
 
+
+void UQuest::OnSucceeded(class UQuestStatus* QuestStatus) const
+{
+	UE_LOG(LogTemp, Warning, TEXT("Quest \"%s\" succeeded!"), *QuestName.ToString());
+}
+void UQuest::OnFailed(class UQuestStatus* QuestStatus) const
+{
+	UE_LOG(LogTemp, Warning, TEXT("Quest \"%s\" failed!"), *QuestName.ToString());
+}
+
+void UQuestWithResult::OnSucceeded(class UQuestStatus* QuestStatus) const
+{
+	Super::OnSucceeded(QuestStatus);
+	for (UQuest* SuccessQuest : SuccessQuests)
+	{
+		QuestStatus->BeginQuest(SuccessQuest);
+	}
+
+	for (int32 i = 0; i < SuccessInputs.Num(); ++i)
+	{
+		QuestStatus->UpdateQuests(SuccessInputs[i]);
+	}
+}
+void UQuestWithResult::OnFailed(class UQuestStatus* QuestStatus) const
+{
+//	UE_LOG(LogTemp, Warning, TEXT("Quest \"%s\" failed!"), *QuestName.ToString());
+	Super::OnSucceeded(QuestStatus);
+	for (UQuest* FailureQuest : FailureQuests)
+	{
+		QuestStatus->BeginQuest(FailureQuest);
+	}
+
+	for (int32 i = 0; i < FailureInputs.Num(); ++i)
+	{
+		QuestStatus->UpdateQuests(FailureInputs[i]);
+	}
+}
 UQuestStatus::UQuestStatus()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -45,13 +82,14 @@ void UQuestStatus::UpdateQuests(USM_InputAtom* QuestActivity)
 		{
 			QIP.Quest->OnSucceeded(this);
 		}
-		else 
+		else
 		{
-			QIP.Quest->OnFailure(this);
+			QIP.Quest->OnFailed(this);
 		}
 		RecentlyCompletedQuests.RemoveAtSwap(i);
 
 	}
+}
 
 
 bool UQuestStatus::BeginQuest(const UQuest* Quest)
@@ -60,10 +98,10 @@ bool UQuestStatus::BeginQuest(const UQuest* Quest)
 	{
 		if (QIP.Quest == Quest)
 		{
-			if (QIP.QuestInProgress == EQuestCompletion::EQC_NotStarted)
+			if (QIP.QuestProgress == EQuestCompletion::EQC_NotStarted)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Changing Quest \"%s\" to Started status"), *QIP.Quest->QuestName.ToString());
-				QIP.QuestInProgress = EQuestCompletion::EQC_Started; 
+				QIP.QuestProgress = EQuestCompletion::EQC_Started; 
 				return true;
 			}
 
@@ -77,13 +115,6 @@ bool UQuestStatus::BeginQuest(const UQuest* Quest)
 	return false;
 }
 
-void UQuestStatus::OnSucceeded(class UQuestStatus* QuestStatus)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Quest \"%s\" succeeded!"), *QuestName.ToString() );
-}
-void UQuestStatus::OnFailed(class UQuestStatus* QuestStatus)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Quest \"%s\" failed!"), *QuestName.ToString());
-}
+
 
 

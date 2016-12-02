@@ -8,9 +8,17 @@ USM_State::USM_State()
 	bLoopByDefault = true;
 }
 
+USM_State* USM_BranchBase::TryBranch(const UObject* RefObject,
+	const TArray<USM_InputAtom*>& DataSource, int32 DataIndex, int32 &OutDataIndex)
+{
+	OutDataIndex = DataIndex;
+	return DestinationState;
+}
+
 USM_State* USM_Branch::TryBranch(const UObject* RefObject,
 	const TArray<USM_InputAtom*>& DataSource, int32 DataIndex, int32 &OutDataIndex)
 {
+	Super::TryBranch(RefObject, DataSource, DataIndex, OutDataIndex);
 	OutDataIndex = DataIndex + 1;
 	if (DataSource.IsValidIndex(DataIndex) && AcceptableInputs.Contains(DataSource[DataIndex]))
 	{

@@ -25,31 +25,7 @@ class DELIRIUM_TOWER_API UQuest : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	virtual void OnSucceeded(class UQuestStatus* QuestStatus) const;
-	virtual void OnFailed(class UQuestStatus* QuestStatus) const;
-protected:
-	// Quests that will start if we succeed this
-	UPROPERTY(EditAnywhere)
-	TArray<UQuest*> SuccessQuests;
 
-	UPROPERTY(EditAnywhere)
-	TArray<USM_InputAtom*> SuccessInputs;
-
-	// Quests that will start if we fail this
-	UPROPERTY(EditAnywhere)
-	TArray<UQuest*> FailureQuests;
-
-	// Input atoms to add to failure
-	UPROPERTY(EditAnywhere)
-	TArray<USM_InputAtom*> FailureInputs;
-};
-
-UCLASS()
-class DELIRIUM_TOWER_API UQuestWithResult : public UDataAsset
-{
-	GENERATED_BODY()
-
-public:
 	// Name of the quest
 	UPROPERTY(EditAnywhere)
 		FText QuestName;
@@ -65,9 +41,37 @@ public:
 	// The blacklist used to filter InputAtoms this quest recognizes
 	UPROPERTY(EditAnywhere)
 		TArray<USM_InputAtom*> InputList;
+	virtual void OnSucceeded(class UQuestStatus* QuestStatus) const;
+	virtual void OnFailed(class UQuestStatus* QuestStatus) const;
+protected:
+};
+
+UCLASS()
+class DELIRIUM_TOWER_API UQuestWithResult : public UQuest
+{
+	GENERATED_BODY()
+
+public:
+
 
 	virtual void OnSucceeded(class UQuestStatus* QuestStatus) const;
 	virtual void OnFailed(class UQuestStatus* QuestStatus) const;
+protected:
+	// Quests that will start if we succeed this
+	UPROPERTY(EditAnywhere)
+		TArray<UQuest*> SuccessQuests;
+
+	UPROPERTY(EditAnywhere)
+		TArray<USM_InputAtom*> SuccessInputs;
+
+	// Quests that will start if we fail this
+	UPROPERTY(EditAnywhere)
+		TArray<UQuest*> FailureQuests;
+
+	// Input atoms to add to failure
+	UPROPERTY(EditAnywhere)
+		TArray<USM_InputAtom*> FailureInputs;
+
 };
 
 USTRUCT()

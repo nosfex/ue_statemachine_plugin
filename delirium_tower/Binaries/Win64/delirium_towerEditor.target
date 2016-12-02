@@ -2,7 +2,7 @@
 	"TargetName" : "delirium_towerEditor",
 	"Platform" : "Win64",
 	"Configuration" : "Development",
-	"BuildId" : "2e441470-535d-4509-a15c-a93ce0a1890a",
+	"BuildId" : "c439de4a-2f2b-49b0-bb8f-4335f681884d",
 	"Version" : 
 	{
 		"MajorVersion" : 4,
@@ -16,27 +16,27 @@
 	"BuildProducts" :
 	[
 		{
-			"Path" : "$(ProjectDir)/Plugins/StateMachine/Binaries/Win64/UE4Editor-StateMachine-8493.dll",
+			"Path" : "$(ProjectDir)/Plugins/StateMachine/Binaries/Win64/UE4Editor-StateMachine.dll",
 			"Type" : "DynamicLibrary"
 		},
 		{
-			"Path" : "$(ProjectDir)/Plugins/StateMachine/Binaries/Win64/UE4Editor-StateMachine-8493.pdb",
+			"Path" : "$(ProjectDir)/Plugins/StateMachine/Binaries/Win64/UE4Editor-StateMachine.pdb",
 			"Type" : "SymbolFile"
 		},
 		{
-			"Path" : "$(ProjectDir)/Plugins/StateMachine/Intermediate/Build/Win64/UE4Editor/Development/UE4Editor-StateMachine-8493.lib",
+			"Path" : "$(ProjectDir)/Plugins/StateMachine/Intermediate/Build/Win64/UE4Editor/Development/UE4Editor-StateMachine.lib",
 			"Type" : "ImportLibrary"
 		},
 		{
-			"Path" : "$(ProjectDir)/Binaries/Win64/UE4Editor-delirium_tower-4003.dll",
+			"Path" : "$(ProjectDir)/Binaries/Win64/UE4Editor-delirium_tower.dll",
 			"Type" : "DynamicLibrary"
 		},
 		{
-			"Path" : "$(ProjectDir)/Binaries/Win64/UE4Editor-delirium_tower-4003.pdb",
+			"Path" : "$(ProjectDir)/Binaries/Win64/UE4Editor-delirium_tower.pdb",
 			"Type" : "SymbolFile"
 		},
 		{
-			"Path" : "$(ProjectDir)/Intermediate/Build/Win64/UE4Editor/Development/UE4Editor-delirium_tower-4003.lib",
+			"Path" : "$(ProjectDir)/Intermediate/Build/Win64/UE4Editor/Development/UE4Editor-delirium_tower.lib",
 			"Type" : "ImportLibrary"
 		}
 	],
